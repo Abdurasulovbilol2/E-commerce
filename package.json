@@ -1,0 +1,17 @@
+{
+  "name": "e-commerce-quality-engineering-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A TypeScript and Playwright portfolio framework for e-commerce quality engineering.",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2"
+  }
+}

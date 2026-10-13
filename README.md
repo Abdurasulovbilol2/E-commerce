@@ -26,6 +26,16 @@ npx playwright test tests/login.spec.ts tests/products.spec.ts
 
 Playwright is configured to treat SauceDemo's `data-test` attributes as test IDs, so tests can use `getByTestId` for its stable catalog hooks.
 
+## Phase 3: Cart and checkout
+
+Cart coverage verifies adding two products, their cart contents and count, removing each product, and the empty-cart state. Checkout coverage verifies the required first name, last name, and postal code fields, then completes an order for one item.
+
+Run just the Phase 3 tests with:
+
+```bash
+npx playwright test tests/cart.spec.ts tests/checkout.spec.ts
+```
+
 ## Reports and configuration
 
 The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots and traces are captured on test failure under `test-results/`.

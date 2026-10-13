@@ -6,6 +6,7 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   use: {
     baseURL: process.env.BASE_URL ?? "https://www.saucedemo.com",
+    testIdAttribute: "data-test",
     ...devices["Desktop Chrome"],
     screenshot: "only-on-failure",
     trace: "retain-on-failure",

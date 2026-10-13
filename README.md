@@ -14,6 +14,18 @@ npm test
 
 The test confirms that the demo store opens and exposes its login form. To run it visibly in a browser, use `npm run test:headed`. To open Playwright's interactive runner, use `npm run test:ui`.
 
+## Phase 2: Login and products
+
+The login tests cover a successful standard-user login and rejection of invalid credentials. Product tests verify the six-item catalog, alphabetical sorting, and ascending price sorting. SauceDemo's public demo credentials are used only for these demo tests; no private credentials are stored.
+
+Run just the Phase 2 tests with:
+
+```bash
+npx playwright test tests/login.spec.ts tests/products.spec.ts
+```
+
+Playwright is configured to treat SauceDemo's `data-test` attributes as test IDs, so tests can use `getByTestId` for its stable catalog hooks.
+
 ## Reports and configuration
 
 The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots and traces are captured on test failure under `test-results/`.

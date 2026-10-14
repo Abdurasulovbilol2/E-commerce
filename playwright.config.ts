@@ -3,13 +3,29 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests",
   fullyParallel: true,
-  reporter: [["list"], ["html", { open: "never" }]],
+  expect: {
+    timeout: 15000,
+  },
+  reporter: [
+    ["list"],
+    [
+      "html",
+      {
+        open: "never",
+        outputFolder: "playwright-report",
+        reportName: "ecommerce-quality-report",
+      },
+    ],
+  ],
   use: {
     baseURL: process.env.BASE_URL ?? "https://www.saucedemo.com",
     testIdAttribute: "data-test",
     ...devices["Desktop Chrome"],
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
+    video: "retain-on-failure",
+    actionTimeout: 15000,
+    navigationTimeout: 30000,
   },
   projects: [
     {

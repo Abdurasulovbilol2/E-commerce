@@ -56,9 +56,19 @@ Run just the API tests with:
 npx playwright test tests/api/posts-api.spec.ts
 ```
 
+## Phase 6: Reporting and debugging
+
+This phase hardens the project for troubleshooting and evidence collection. Playwright is configured to retain HTML reports, screenshots, videos, and traces for failures. Console logging around key steps gives immediate execution context during a failing run, and the suite now keeps failure artifacts under `test-results/` and the HTML report under `playwright-report/`.
+
+Run just the debugging/reporting smoke test with:
+
+```bash
+npx playwright test tests/debugging.spec.ts
+```
+
 ## Reports and configuration
 
-The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots and traces are captured on test failure under `test-results/`.
+The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots, videos, and traces are retained on failure under `test-results/`, and the list reporter prints a concise console summary for each run.
 
 Set `BASE_URL` to run against another compatible demo environment; the default is `https://www.saucedemo.com`.
 

@@ -66,6 +66,20 @@ Run just the debugging/reporting smoke test with:
 npx playwright test tests/debugging.spec.ts
 ```
 
+## Phase 7: GitHub Actions CI/CD
+
+This project includes a GitHub Actions workflow that installs dependencies, installs the required Playwright browser, runs the automated suite, and uploads the HTML report and failure artifacts for debugging.
+
+The workflow runs on pushes and pull requests to `main` and fails the job when any Playwright test fails. The workflow file is located at `.github/workflows/playwright.yml`.
+
+Local equivalent commands:
+
+```bash
+npm ci
+npx playwright install --with-deps chromium
+npm test
+```
+
 ## Reports and configuration
 
 The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots, videos, and traces are retained on failure under `test-results/`, and the list reporter prints a concise console summary for each run.

@@ -1,23 +1,22 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test.describe("login", () => {
-  test("allows a standard user to sign in", async ({ page }) => {
-    await page.goto("/");
-    await page.getByPlaceholder("Username").fill("standard_user");
-    await page.getByPlaceholder("Password").fill("secret_sauce");
-    await page.getByRole("button", { name: "Login" }).click();
+  test("allows a standard user to sign in", async ({ loginPage, page }) => {
+    await loginPage.goto();
+    await loginPage.loginAsStandardUser();
 
     await expect(page).toHaveURL(/inventory\.html$/);
-    await expect(page.getByTestId("inventory-item").first()).toBeVisible();
+    await expect(loginPage.inventoryItems.first()).toBeVisible();
   });
 
-  test("shows an error for invalid credentials", async ({ page }) => {
-    await page.goto("/");
-    await page.getByPlaceholder("Username").fill("invalid_user");
-    await page.getByPlaceholder("Password").fill("invalid_password");
-    await page.getByRole("button", { name: "Login" }).click();
+  test("shows an error for invalid credentials", async ({
+    loginPage,
+    page,
+  }) => {
+    await loginPage.goto();
+    await loginPage.login("invalid_user", "invalid_password");
 
-    await expect(page.getByTestId("error")).toContainText(
+    await expect(loginPage.errorMessage).toContainText(
       "Username and password do not match",
     );
     await expect(page).toHaveURL(/\/$/);

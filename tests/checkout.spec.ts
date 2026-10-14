@@ -1,50 +1,43 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test.describe("checkout", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    await page.getByPlaceholder("Username").fill("standard_user");
-    await page.getByPlaceholder("Password").fill("secret_sauce");
-    await page.getByRole("button", { name: "Login" }).click();
-    await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-    await page.getByTestId("shopping-cart-link").click();
-    await page.getByTestId("checkout").click();
-    await expect(page.getByTestId("firstName")).toBeVisible();
+  test.beforeEach(async ({ productsPage, checkoutPage }) => {
+    await productsPage.open();
+    await productsPage.addBackpack();
+    await productsPage.openCart();
+    await checkoutPage.startCheckout();
+    await expect(checkoutPage.firstNameInput).toBeVisible();
   });
 
-  test("requires a first name", async ({ page }) => {
-    await page.getByTestId("continue").click();
+  test("requires a first name", async ({ checkoutPage }) => {
+    await checkoutPage.continue();
 
-    await expect(page.getByTestId("error")).toContainText(
+    await expect(checkoutPage.errorMessage).toContainText(
       "First Name is required",
     );
   });
 
-  test("requires a last name", async ({ page }) => {
-    await page.getByTestId("firstName").fill("Taylor");
-    await page.getByTestId("postalCode").fill("10001");
-    await page.getByTestId("continue").click();
+  test("requires a last name", async ({ checkoutPage }) => {
+    await checkoutPage.fillCustomerInfo("Taylor", "", "10001");
+    await checkoutPage.continue();
 
-    await expect(page.getByTestId("error")).toContainText(
+    await expect(checkoutPage.errorMessage).toContainText(
       "Last Name is required",
     );
   });
 
-  test("requires a postal code", async ({ page }) => {
-    await page.getByTestId("firstName").fill("Taylor");
-    await page.getByTestId("lastName").fill("Tester");
-    await page.getByTestId("continue").click();
+  test("requires a postal code", async ({ checkoutPage }) => {
+    await checkoutPage.fillCustomerInfo("Taylor", "Tester", "");
+    await checkoutPage.continue();
 
-    await expect(page.getByTestId("error")).toContainText(
+    await expect(checkoutPage.errorMessage).toContainText(
       "Postal Code is required",
     );
   });
 
-  test("places an order for a cart item", async ({ page }) => {
-    await page.getByTestId("firstName").fill("Taylor");
-    await page.getByTestId("lastName").fill("Tester");
-    await page.getByTestId("postalCode").fill("10001");
-    await page.getByTestId("continue").click();
+  test("places an order for a cart item", async ({ page, checkoutPage }) => {
+    await checkoutPage.fillCustomerInfo("Taylor", "Tester", "10001");
+    await checkoutPage.continue();
 
     await expect(page).toHaveURL(/checkout-step-two\.html$/);
     await expect(
@@ -53,7 +46,7 @@ test.describe("checkout", () => {
       }),
     ).toBeVisible();
     await expect(page.getByText("Total: $32.39")).toBeVisible();
-    await page.getByTestId("finish").click();
+    await checkoutPage.finish();
 
     await expect(page).toHaveURL(/checkout-complete\.html$/);
     await expect(

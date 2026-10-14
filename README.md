@@ -36,6 +36,16 @@ Run just the Phase 3 tests with:
 npx playwright test tests/cart.spec.ts tests/checkout.spec.ts
 ```
 
+## Phase 4: Page Object Model and reusable fixtures
+
+This phase introduces page objects for the login, catalog, cart, and checkout flows, plus a reusable Playwright fixture layer in `tests/fixtures.ts`. The goal is to centralize page interactions, reduce duplication, and keep test scenarios readable for interview and maintenance purposes.
+
+Run just the Phase 4 tests with:
+
+```bash
+npx playwright test tests/login.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts
+```
+
 ## Reports and configuration
 
 The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots and traces are captured on test failure under `test-results/`.

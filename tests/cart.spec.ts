@@ -1,46 +1,31 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures";
 
 test.describe("shopping cart", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    await page.getByPlaceholder("Username").fill("standard_user");
-    await page.getByPlaceholder("Password").fill("secret_sauce");
-    await page.getByRole("button", { name: "Login" }).click();
-    await expect(page.getByTestId("inventory-item").first()).toBeVisible();
+  test.beforeEach(async ({ productsPage }) => {
+    await productsPage.open();
   });
 
-  test("adds products to the cart and removes them", async ({ page }) => {
-    await page.getByTestId("add-to-cart-sauce-labs-backpack").click();
-    await page.getByTestId("add-to-cart-sauce-labs-bike-light").click();
-    await expect(page.getByTestId("shopping-cart-badge")).toHaveText("2");
+  test("adds products to the cart and removes them", async ({
+    productsPage,
+    cartPage,
+  }) => {
+    await productsPage.addBackpack();
+    await productsPage.addBikeLight();
+    await expect(productsPage.shoppingCartBadge).toHaveText("2");
 
-    await page.getByTestId("shopping-cart-link").click();
-    const cartProducts = page.getByRole("button", {
-      name: /^View details for /,
-    });
+    await productsPage.openCart();
+    const cartProducts = cartPage.productButtons;
     await expect(cartProducts).toHaveCount(2);
-    await expect(
-      page.getByRole("button", {
-        name: "View details for Sauce Labs Backpack",
-      }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", {
-        name: "View details for Sauce Labs Bike Light",
-      }),
-    ).toBeVisible();
+    await expect(cartPage.productButton("Sauce Labs Backpack")).toBeVisible();
+    await expect(cartPage.productButton("Sauce Labs Bike Light")).toBeVisible();
 
-    await page.getByRole("button", { name: "Remove" }).first().click();
-    await expect(page.getByTestId("shopping-cart-badge")).toHaveText("1");
+    await cartPage.removeFirstProduct();
+    await expect(cartPage.shoppingCartBadge).toHaveText("1");
     await expect(cartProducts).toHaveCount(1);
-    await expect(
-      page.getByRole("button", {
-        name: "View details for Sauce Labs Bike Light",
-      }),
-    ).toBeVisible();
+    await expect(cartPage.productButton("Sauce Labs Bike Light")).toBeVisible();
 
-    await page.getByRole("button", { name: "Remove" }).click();
+    await cartPage.removeLastVisibleProduct();
     await expect(cartProducts).toHaveCount(0);
-    await expect(page.getByTestId("shopping-cart-badge")).toBeHidden();
+    await expect(cartPage.shoppingCartBadge).toBeHidden();
   });
 });

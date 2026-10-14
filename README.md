@@ -1,91 +1,222 @@
 # E-Commerce Quality Engineering Framework
 
-A TypeScript and Playwright portfolio project for validating an e-commerce demo application. Phase 1 establishes the browser test runner and a smoke test against [SauceDemo](https://www.saucedemo.com/), a public application intended for testing.
+A professional TypeScript and Playwright test automation portfolio project for validating an e-commerce demo application. This repository demonstrates how a quality engineering team structures UI, API, and reporting automation for a realistic e-commerce workflow while keeping the framework maintainable, interview-friendly, and GitHub-ready.
 
-## Phase 1 setup
+## Project overview
 
-Prerequisites: Node.js 20 or newer, npm, and network access to install packages, the Playwright browser, and SauceDemo. Git is recommended for version control.
+This project is designed to showcase SDET and Automation Test Engineer skills using a real public test application: SauceDemo. The framework covers critical user journeys such as login, product discovery, sorting, cart functionality, and checkout validation using Playwright. It also includes API automation through JSONPlaceholder to demonstrate backend validation skills with the same tooling stack.
+
+The project intentionally follows a clean automation architecture with reusable page objects, fixtures, utilities, clear naming conventions, and artifact-based reporting. It is well suited for GitHub portfolios and interview discussions about automation design, maintainability, and practical QA strategy.
+
+## Business requirements
+
+The goal is to validate that an e-commerce storefront meets critical quality expectations:
+
+- Users can sign in successfully with valid credentials
+- Invalid login attempts are blocked with clear error messaging
+- Product listings load correctly and can be sorted
+- Users can add and remove items from the cart
+- Cart count and contents remain consistent with user actions
+- Checkout validation prevents incomplete orders
+- Successful checkout can be completed with valid data
+- Public API endpoints support reliable CRUD and negative-path validation
+- CI pipeline publishes evidence when failures occur
+
+## Technology stack
+
+- TypeScript
+- Playwright
+- Playwright API testing
+- Page Object Model (POM)
+- HTML report generation
+- Git and GitHub
+- GitHub Actions
+- Node.js and npm
+
+## Framework architecture
+
+The framework separates responsibilities into UI flows, API testing, shared page objects, reusable fixtures, and reporting artifacts. This keeps each layer focused and reduces duplication across test cases.
+
+```mermaid
+flowchart TD
+    A[GitHub Repository] --> B[Playwright Config]
+    B --> C[UI Tests]
+    B --> D[API Tests]
+    C --> E[Page Objects]
+    C --> F[Fixtures]
+    E --> G[SauceDemo UI]
+    D --> H[JSONPlaceholder API]
+    F --> I[Shared Assertions]
+    I --> J[HTML Report]
+    I --> K[Test Results / Traces / Screenshots / Videos]
+    J --> L[GitHub Actions CI]
+    K --> L
+```
+
+## Repository structure
+
+```text
+.
+├── .github/
+│   └── workflows/
+│       └── playwright.yml
+├── tests/
+│   ├── api/
+│   │   ├── JsonPlaceholderClient.ts
+│   │   └── posts-api.spec.ts
+│   ├── pages/
+│   │   ├── LoginPage.ts
+│   │   ├── ProductsPage.ts
+│   │   ├── CartPage.ts
+│   │   └── CheckoutPage.ts
+│   ├── fixtures.ts
+│   ├── first.spec.ts
+│   ├── login.spec.ts
+│   ├── products.spec.ts
+│   ├── cart.spec.ts
+│   ├── checkout.spec.ts
+│   ├── debugging.spec.ts
+│   └── ...
+├── .env.example
+├── .gitignore
+├── package.json
+├── playwright.config.ts
+├── tsconfig.json
+├── README.md
+├── TEST-PLAN.md
+├── TEST-CASES.md
+├── TEST-STRATEGY.md
+├── playwright-report/
+├── test-results/
+├── package-lock.json
+└── node_modules/
+```
+
+## Prerequisites
+
+- Node.js 20 or newer
+- npm 10+
+- Git
+- Network access to install Playwright browsers and access public demo systems
+
+## Installation
 
 ```bash
 npm install
-npx playwright install chromium
+npx playwright install --with-deps chromium
+```
+
+## Running the suite
+
+Run the full project suite:
+
+```bash
 npm test
 ```
 
-The test confirms that the demo store opens and exposes its login form. To run it visibly in a browser, use `npm run test:headed`. To open Playwright's interactive runner, use `npm run test:ui`.
+Run the smoke test:
 
-## Phase 2: Login and products
+```bash
+npx playwright test tests/first.spec.ts
+```
 
-The login tests cover a successful standard-user login and rejection of invalid credentials. Product tests verify the six-item catalog, alphabetical sorting, and ascending price sorting. SauceDemo's public demo credentials are used only for these demo tests; no private credentials are stored.
-
-Run just the Phase 2 tests with:
+Run login and product tests:
 
 ```bash
 npx playwright test tests/login.spec.ts tests/products.spec.ts
 ```
 
-Playwright is configured to treat SauceDemo's `data-test` attributes as test IDs, so tests can use `getByTestId` for its stable catalog hooks.
-
-## Phase 3: Cart and checkout
-
-Cart coverage verifies adding two products, their cart contents and count, removing each product, and the empty-cart state. Checkout coverage verifies the required first name, last name, and postal code fields, then completes an order for one item.
-
-Run just the Phase 3 tests with:
+Run cart and checkout tests:
 
 ```bash
 npx playwright test tests/cart.spec.ts tests/checkout.spec.ts
 ```
 
-## Phase 4: Page Object Model and reusable fixtures
-
-This phase introduces page objects for the login, catalog, cart, and checkout flows, plus a reusable Playwright fixture layer in `tests/fixtures.ts`. The goal is to centralize page interactions, reduce duplication, and keep test scenarios readable for interview and maintenance purposes.
-
-Run just the Phase 4 tests with:
-
-```bash
-npx playwright test tests/login.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts
-```
-
-## Phase 5: API automation
-
-This phase adds a dedicated API test layer built with Playwright's request API against the public JSONPlaceholder service. The suite covers GET, POST, PUT, PATCH, DELETE, schema validation, response status checks, and a missing-resource 404 scenario. The API layer is separated from the UI automation and kept in `tests/api/` to preserve a clean architecture.
-
-Run just the API tests with:
+Run API tests:
 
 ```bash
 npx playwright test tests/api/posts-api.spec.ts
 ```
 
-## Phase 6: Reporting and debugging
-
-This phase hardens the project for troubleshooting and evidence collection. Playwright is configured to retain HTML reports, screenshots, videos, and traces for failures. Console logging around key steps gives immediate execution context during a failing run, and the suite now keeps failure artifacts under `test-results/` and the HTML report under `playwright-report/`.
-
-Run just the debugging/reporting smoke test with:
+Run debugging/reporting smoke test:
 
 ```bash
 npx playwright test tests/debugging.spec.ts
 ```
 
-## Phase 7: GitHub Actions CI/CD
-
-This project includes a GitHub Actions workflow that installs dependencies, installs the required Playwright browser, runs the automated suite, and uploads the HTML report and failure artifacts for debugging.
-
-The workflow runs on pushes and pull requests to `main` and fails the job when any Playwright test fails. The workflow file is located at `.github/workflows/playwright.yml`.
-
-Local equivalent commands:
+Run with headed browser:
 
 ```bash
-npm ci
-npx playwright install --with-deps chromium
-npm test
+npm run test:headed
 ```
 
-## Reports and configuration
+Open the HTML report:
 
-The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots, videos, and traces are retained on failure under `test-results/`, and the list reporter prints a concise console summary for each run.
+```bash
+npm run report
+```
 
-Set `BASE_URL` to run against another compatible demo environment; the default is `https://www.saucedemo.com`.
+## Test scenarios covered
 
-## Planned framework shape
+- Successful login
+- Invalid credentials flow
+- Product listing validation
+- Sorting by name and price
+- Add and remove item from cart
+- Empty-cart validation
+- Checkout required-field validation
+- Successful order completion
+- API GET, POST, PUT, PATCH, DELETE checks
+- Negative API scenario for missing records
 
-As later phases are completed, UI and API tests will be separated, with page objects, reusable fixtures, API clients, common utilities, and test data kept in their own focused areas. This starter intentionally avoids introducing those abstractions before there are workflows to support them.
+## Reporting and debugging
+
+The Playwright configuration stores:
+
+- HTML reports
+- Screenshots on failure
+- Videos on failure
+- Trace files on failure
+- Console logs for runtime debugging
+
+This makes it easier to diagnose root causes during CI or local execution without relying on ad hoc manual checks.
+
+## CI/CD workflow details
+
+The GitHub Actions workflow in `.github/workflows/playwright.yml` does the following:
+
+- Checks out the repository
+- Sets up Node.js
+- Installs dependencies with `npm ci`
+- Installs Playwright browsers
+- Runs the automated suite
+- Uploads the HTML report as an artifact
+- Uploads failure artifacts from `test-results/`
+- Runs on pushes and pull requests to `main`
+
+## Known limitations
+
+- The UI tests target a public demo site, not a production e-commerce application
+- SauceDemo is intentionally static and limited in scope compared with a real enterprise app
+- API tests use JSONPlaceholder, which simulates a public CRUD API rather than a production API contract
+- Database validation is not yet implemented, although it is planned for future enhancement
+
+## Future enhancements
+
+- SQL and database validation using a dedicated test database
+- Environment-based configuration and secret management for multiple test environments
+- Data-driven testing using JSON/CSV fixtures
+- Additional negative-edge and boundary tests
+- API schema validation with dedicated JSON schema checks
+- Better reporting with custom dashboards and trend analysis
+- Lightweight custom utilities for retries, logging, and reusable assertions
+
+## Documentation references
+
+- [TEST-PLAN.md](TEST-PLAN.md)
+- [TEST-CASES.md](TEST-CASES.md)
+- [TEST-STRATEGY.md](TEST-STRATEGY.md)
+
+## Summary
+
+This project demonstrates a realistic, maintainable, and professional test automation framework that can be used to discuss SDET responsibilities, testing strategy, and CI quality engineering in interviews and on GitHub.

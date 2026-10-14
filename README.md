@@ -46,6 +46,16 @@ Run just the Phase 4 tests with:
 npx playwright test tests/login.spec.ts tests/products.spec.ts tests/cart.spec.ts tests/checkout.spec.ts
 ```
 
+## Phase 5: API automation
+
+This phase adds a dedicated API test layer built with Playwright's request API against the public JSONPlaceholder service. The suite covers GET, POST, PUT, PATCH, DELETE, schema validation, response status checks, and a missing-resource 404 scenario. The API layer is separated from the UI automation and kept in `tests/api/` to preserve a clean architecture.
+
+Run just the API tests with:
+
+```bash
+npx playwright test tests/api/posts-api.spec.ts
+```
+
 ## Reports and configuration
 
 The HTML report is generated at `playwright-report/` after a test run. Open it with `npm run report`. Screenshots and traces are captured on test failure under `test-results/`.

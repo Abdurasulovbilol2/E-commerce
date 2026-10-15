@@ -19,6 +19,11 @@ export class LoginPage {
     await this.login(username, password);
   }
 
+  async loginAsLockedOutUser() {
+    const { username, password } = TEST_USERS.lockedOutUser;
+    await this.login(username, password);
+  }
+
   get usernameInput() {
     return this.page.getByPlaceholder("Username");
   }

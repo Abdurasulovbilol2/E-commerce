@@ -6,7 +6,9 @@ dotenv.config();
 
 export default defineConfig({
   testDir: "./tests",
-  fullyParallel: true,
+  fullyParallel: false,
+  workers: 1,
+  retries: 1,
   expect: {
     timeout: 15000,
   },
@@ -35,6 +37,14 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
+    },
+    {
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
     },
   ],
   outputDir: "./test-results",

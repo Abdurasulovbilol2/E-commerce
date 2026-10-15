@@ -103,7 +103,7 @@ flowchart TD
 
 ```bash
 npm install
-npx playwright install --with-deps chromium
+npx playwright install --with-deps
 ```
 
 ## Running the suite

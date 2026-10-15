@@ -18,6 +18,17 @@ test.describe("product catalog", () => {
     );
   });
 
+  test("sorts product names reverse alphabetically", async ({
+    productsPage,
+  }) => {
+    await productsPage.sortBy("za");
+
+    const names = await productsPage.productNames.allTextContents();
+    expect(names).toEqual(
+      [...names].sort((first, second) => second.localeCompare(first)),
+    );
+  });
+
   test("sorts product prices from low to high", async ({ productsPage }) => {
     await productsPage.sortBy("lohi");
 
@@ -26,5 +37,15 @@ test.describe("product catalog", () => {
       Number(price.replace("$", "")),
     );
     expect(prices).toEqual([...prices].sort((first, second) => first - second));
+  });
+
+  test("sorts product prices from high to low", async ({ productsPage }) => {
+    await productsPage.sortBy("hilo");
+
+    const displayedPrices = await productsPage.productPrices.allTextContents();
+    const prices = displayedPrices.map((price) =>
+      Number(price.replace("$", "")),
+    );
+    expect(prices).toEqual([...prices].sort((first, second) => second - first));
   });
 });

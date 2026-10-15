@@ -54,4 +54,16 @@ test.describe("checkout", () => {
       page.getByText("Thank you for your order!", { exact: true }),
     ).toBeVisible();
   });
+
+  test("allows a user to cancel checkout and return to the product catalog", async ({
+    page,
+    checkoutPage,
+  }) => {
+    await checkoutPage.fillCustomerInfo("Taylor", "Tester", "10001");
+    await checkoutPage.continue();
+
+    await page.getByTestId("cancel").click();
+    await expect(page).toHaveURL(/inventory\.html$/);
+    await expect(page.getByText("Products")).toBeVisible();
+  });
 });

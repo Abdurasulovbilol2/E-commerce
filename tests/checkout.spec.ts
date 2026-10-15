@@ -1,3 +1,4 @@
+import { PRODUCT_DATA } from "./config/testData";
 import { expect, test } from "./fixtures";
 
 test.describe("checkout", () => {
@@ -42,7 +43,7 @@ test.describe("checkout", () => {
     await expect(page).toHaveURL(/checkout-step-two\.html$/);
     await expect(
       page.getByRole("button", {
-        name: "View details for Sauce Labs Backpack",
+        name: `View details for ${PRODUCT_DATA.backpack.name}`,
       }),
     ).toBeVisible();
     await expect(page.getByText("Total: $32.39")).toBeVisible();

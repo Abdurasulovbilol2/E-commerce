@@ -1,3 +1,4 @@
+import { PRODUCT_DATA } from "./config/testData";
 import { expect, test } from "./fixtures";
 
 test.describe("shopping cart", () => {
@@ -16,13 +17,19 @@ test.describe("shopping cart", () => {
     await productsPage.openCart();
     const cartProducts = cartPage.productButtons;
     await expect(cartProducts).toHaveCount(2);
-    await expect(cartPage.productButton("Sauce Labs Backpack")).toBeVisible();
-    await expect(cartPage.productButton("Sauce Labs Bike Light")).toBeVisible();
+    await expect(
+      cartPage.productButton(PRODUCT_DATA.backpack.name),
+    ).toBeVisible();
+    await expect(
+      cartPage.productButton(PRODUCT_DATA.bikeLight.name),
+    ).toBeVisible();
 
     await cartPage.removeFirstProduct();
     await expect(cartPage.shoppingCartBadge).toHaveText("1");
     await expect(cartProducts).toHaveCount(1);
-    await expect(cartPage.productButton("Sauce Labs Bike Light")).toBeVisible();
+    await expect(
+      cartPage.productButton(PRODUCT_DATA.bikeLight.name),
+    ).toBeVisible();
 
     await cartPage.removeLastVisibleProduct();
     await expect(cartProducts).toHaveCount(0);

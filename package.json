@@ -7,11 +7,16 @@
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:ui": "playwright test --ui",
+    "test:smoke": "playwright test tests/login.spec.ts tests/debugging.spec.ts",
+    "test:api": "playwright test tests/api/posts-api.spec.ts",
     "report": "playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.0",
     "@types/node": "^26.6.5",
     "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.8"
   }
 }

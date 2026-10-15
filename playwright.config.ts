@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import * as dotenv from "dotenv";
+import { environment } from "./tests/config/environment";
+
+dotenv.config();
 
 export default defineConfig({
   testDir: "./tests",
@@ -18,7 +22,7 @@ export default defineConfig({
     ],
   ],
   use: {
-    baseURL: process.env.BASE_URL ?? "https://www.saucedemo.com",
+    baseURL: environment.BASE_URL,
     testIdAttribute: "data-test",
     ...devices["Desktop Chrome"],
     screenshot: "only-on-failure",

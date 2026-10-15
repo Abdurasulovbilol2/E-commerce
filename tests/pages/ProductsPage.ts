@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { PRODUCT_DATA } from "../config/testData";
 import { LoginPage } from "./LoginPage";
 
 export class ProductsPage {
@@ -11,11 +12,11 @@ export class ProductsPage {
   }
 
   async addBackpack() {
-    await this.page.getByTestId("add-to-cart-sauce-labs-backpack").click();
+    await this.page.getByTestId(PRODUCT_DATA.backpack.addToCartId).click();
   }
 
   async addBikeLight() {
-    await this.page.getByTestId("add-to-cart-sauce-labs-bike-light").click();
+    await this.page.getByTestId(PRODUCT_DATA.bikeLight.addToCartId).click();
   }
 
   async sortBy(option: "az" | "za" | "lohi" | "hilo") {

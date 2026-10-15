@@ -1,4 +1,5 @@
 import type { Page } from "@playwright/test";
+import { TEST_USERS } from "../config/testData";
 
 export class LoginPage {
   constructor(private readonly page: Page) {}
@@ -14,7 +15,8 @@ export class LoginPage {
   }
 
   async loginAsStandardUser() {
-    await this.login("standard_user", "secret_sauce");
+    const { username, password } = TEST_USERS.standardUser;
+    await this.login(username, password);
   }
 
   get usernameInput() {

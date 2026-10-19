@@ -23,6 +23,10 @@ export class CartPage {
     await this.page.getByTestId("shopping-cart-link").click();
   }
 
+  async continueShopping() {
+    await this.page.getByTestId("continue-shopping").click();
+  }
+
   async removeFirstProduct() {
     await this.removeButtons.first().click();
   }

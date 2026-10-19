@@ -35,4 +35,24 @@ test.describe("shopping cart", () => {
     await expect(cartProducts).toHaveCount(0);
     await expect(cartPage.shoppingCartBadge).toBeHidden();
   });
+
+  test("preserves cart contents when returning to the catalog", async ({
+    page,
+    productsPage,
+    cartPage,
+  }) => {
+    await productsPage.addBackpack();
+    await productsPage.openCart();
+    await cartPage.continueShopping();
+
+    await expect(page).toHaveURL(/inventory\.html$/);
+    await expect(productsPage.shoppingCartBadge).toHaveText("1");
+    await expect(page.getByRole("button", { name: "Remove" })).toBeVisible();
+
+    await productsPage.openCart();
+    await expect(
+      cartPage.productButton(PRODUCT_DATA.backpack.name),
+    ).toBeVisible();
+    await expect(cartPage.productButtons).toHaveCount(1);
+  });
 });

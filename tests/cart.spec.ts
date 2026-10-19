@@ -64,4 +64,18 @@ test.describe("shopping cart", () => {
     await expect(cartPage.productButtons).toHaveCount(1);
     await expect(cartPage.productButtons.first()).toBeVisible();
   });
+
+  test("preserves cart contents after reloading the catalog", async ({
+    page,
+    productsPage,
+    cartPage,
+  }) => {
+    await productsPage.addBackpack();
+    await page.reload();
+
+    await expect(productsPage.shoppingCartBadge).toHaveText("1");
+    await productsPage.openCart();
+    await expect(cartPage.productButtons).toHaveCount(1);
+    await expect(cartPage.productButtons.first()).toBeVisible();
+  });
 });

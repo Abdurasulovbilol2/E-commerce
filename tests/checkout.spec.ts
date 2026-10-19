@@ -55,6 +55,24 @@ test.describe("checkout", () => {
     ).toBeVisible();
   });
 
+  test("calculates the correct total for a multi-item order", async ({
+    page,
+    productsPage,
+    checkoutPage,
+  }) => {
+    await page.getByTestId("cancel").click();
+    await page.getByTestId("continue-shopping").click();
+    await productsPage.addBikeLight();
+    await productsPage.openCart();
+    await checkoutPage.startCheckout();
+    await checkoutPage.fillCustomerInfo("Taylor", "Tester", "10001");
+    await checkoutPage.continue();
+
+    await expect(page.getByText("Item total: $39.98")).toBeVisible();
+    await expect(page.getByText("Tax: $3.20")).toBeVisible();
+    await expect(page.getByText("Total: $43.18")).toBeVisible();
+  });
+
   test("allows a user to cancel checkout and return to the product catalog", async ({
     page,
     checkoutPage,
